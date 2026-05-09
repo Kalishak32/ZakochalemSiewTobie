@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Dla Ciebie ❤️</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: black;
+            color: pink;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            position: relative;
+        }
+
+        /* GŁÓWNE SERCE */
+        #heart {
+            font-size: 16px;
+            white-space: pre;
+            line-height: 1.2;
+            text-align: center;
+            animation: pulse 1.5s infinite;
+            text-shadow: 0 0 8px pink;
+            z-index: 2;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+
+            50% {
+                transform: scale(1.08);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+        }
+
+        /* NAPIS */
+        p {
+            color: white;
+            font-size: 18px;
+            margin-top: 25px;
+            z-index: 2;
+        }
+
+        /* PRZYCISK */
+        button {
+            margin-top: 20px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            background: pink;
+            color: black;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.3s;
+            z-index: 2;
+        }
+
+        button:hover {
+            background: hotpink;
+            transform: scale(1.05);
+        }
+
+        audio {
+            margin-top: 15px;
+            z-index: 2;
+        }
+
+        /* LATAJĄCE SERCA */
+        .hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .heart-bg {
+            position: absolute;
+            color: rgba(255, 105, 180, 0.7);
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) scale(0.5);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-120vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* RESPONSYWNOŚĆ */
+        @media (max-width: 768px) {
+
+            body {
+                padding: 15px;
+            }
+
+            #heart {
+                font-size: 8px;
+                line-height: 1;
+                transform: scale(0.9);
+            }
+
+            p {
+                font-size: 15px;
+                text-align: center;
+            }
+
+            button {
+                width: 85%;
+                max-width: 300px;
+                font-size: 16px;
+                padding: 14px;
+            }
+
+            audio {
+                width: 90%;
+            }
+
+            .heart-bg {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TŁO -->
+    <div class="hearts"></div>
+
+    <!-- SERCE ASCII -->
+    <div id="heart"></div>
+
+    <!-- NAPIS -->
+    <p>Odtwórz dla lepszego efektu 🎶❤️</p>
+
+    <!-- PRZYCISK -->
+    <button id="playBtn">▶ Odtwórz muzykę</button>
+
+    <!-- MUZYKA -->
+    <audio id="music">
+        <source src="Kocham.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+
+        /* ASCII SERCE */
+        const heartDiv = document.getElementById("heart");
+        const phrase = "I love you ";
+        let output = "";
+
+        for (let y = 15; y > -15; y--) {
+
+            let line = "";
+
+            for (let x = -30; x < 30; x++) {
+
+                let a = x * 0.04;
+                let b = y * 0.1;
+
+                let formula =
+                    Math.pow(a * a + b * b - 1, 3)
+                    - a * a * b * b * b;
+
+                if (formula <= 0) {
+
+                    line += phrase[
+                        (x - y + phrase.length * 10)
+                        % phrase.length
+                    ];
+
+                } else {
+
+                    line += " ";
+                }
+            }
+
+            output += line + "\n";
+        }
+
+        /* EFEKT PISANIA */
+        let i = 0;
+
+        function typeEffect() {
+
+            if (i < output.length) {
+
+                heartDiv.textContent += output.charAt(i);
+
+                i++;
+
+                setTimeout(typeEffect, 2);
+            }
+        }
+
+        typeEffect();
+
+        /* MUZYKA */
+        const music = document.getElementById("music");
+        const playBtn = document.getElementById("playBtn");
+
+        playBtn.addEventListener("click", () => {
+
+            music.play();
+
+        });
+
+        /* LATAJĄCE SERCA */
+        const heartsContainer = document.querySelector(".hearts");
+
+        function createHeart() {
+
+            const heart = document.createElement("div");
+
+            heart.classList.add("heart-bg");
+
+            heart.innerHTML = "❤";
+
+            heart.style.left =
+                Math.random() * 100 + "vw";
+
+            heart.style.fontSize =
+                (Math.random() * 20 + 10) + "px";
+
+            const duration =
+                Math.random() * 5 + 5;
+
+            heart.style.animationDuration =
+                duration + "s";
+
+            heartsContainer.appendChild(heart);
+
+            setTimeout(() => {
+
+                heart.remove();
+
+            }, duration * 1000);
+        }
+
+        setInterval(createHeart, 300);
+
+    </script>
+
+</body>
+</html>
